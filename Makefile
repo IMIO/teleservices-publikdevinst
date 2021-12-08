@@ -1,22 +1,29 @@
 install-utils:
-	## VSCode
-	# Install dependencies
+## VSCode
+# Install dependencies
 	sudo apt update && sudo apt upgrade
+	sudo apt install git vim ansible
 	sudo apt install software-properties-common apt-transport-https curl -y
-	# Import GPG keys and Visual Studio repository
+# Import GPG keys and Visual Studio repository
 	curl -sSL https://packages.microsoft.com/keys/microsoft.asc -o microsoft.asc
 	gpg --no-default-keyring --keyring ./ms_signing_key_temp.gpg --import ./microsoft.asc
 	gpg --no-default-keyring --keyring ./ms_signing_key_temp.gpg --export > ./ms_signing_key.gpg
 	sudo mv ms_signing_key.gpg /etc/apt/trusted.gpg.d/
-	# Import the VSCode source repository
+# Import the VSCode source repository
 	echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
 	# Finally install VSCode and output version
 	sudo apt update && sudo apt install code -y
 	code --version
-	
+
+init-themes:
+	test -s ${folder}/imio-publik-themes || git clone https://git.entrouvert.org/imio-publik-themes.git/ ${folder}/imio-publik-themes
+	test -s /usr/local/share/publik-devinst/themes/imio || sudo ln -s ${folder}/imio-publik-themes /usr/local/share/publik-devinst/themes/imio
+	cd /usr/local/share/publik-devinst/themes/imio;git submodule update --init --recursive;make;cd -
 
 folder = ~/src/imio
 init-imio-src:
+	git config --global user.email "daniel.muyshond@imio.be"
+	git config --global user.name "Daniel Muyshond"
 	test -s ${folder} || mkdir ${folder}
 	# common teleservices repositories
 	test -s ${folder}/combo-plugin-imio-townstreet || git clone https://git.entrouvert.org/combo-plugin-imio-townstreet.git/ ${folder}/combo-plugin-imio-townstreet
@@ -42,11 +49,18 @@ init-imio-src:
 	test -s ${folder}/publik-imio-industrialisation || git clone https://git.entrouvert.org/publik-imio-industrialisation.git/ ${folder}/publik-imio-industrialisation
 	test -s ${folder}/wcs-scripts-teleservices || git clone git@github.com:IMIO/wcs-scripts-teleservices.git ${folder}/wcs-scripts-teleservices
 
-build-e-guichet = ~/src/imio/scripts-teleservices/build-e-guichet
+init-ts1-datasources:
+	cd ~/src/imio/passerelle-imio-ts1-datasources;~/envs/publik-env-py3/bin/pip install -e .
+	test -s /home/publikdev/.config/publik/settings/passerelle/settings.d/ts1datasources.py || touch /home/publikdev/.config/publik/settings/passerelle/settings.d/ts1datasources.py;echo "if 'passerelle_imio_ts1_datasources' not in INSTALLED_APPS:" >> /home/publikdev/.config/publik/settings/passerelle/settings.d/ts1datasources.py;echo "   INSTALLED_APPS += ('passerelle_imio_ts1_datasources',)" >> /home/publikdev/.config/publik/settings/passerelle/settings.d/ts1datasources.py;echo "   TENANT_APPS += ('passerelle_imio_ts1_datasources',)" >> /home/publikdev/.config/publik/settings/passerelle/settings.d/ts1datasources.py
+	~/envs/publik-env-py3/bin/passerelle-manage migrate_schemas
+	sudo supervisorctl restart passerelle
+	cd -
 
+
+
+build-e-guichet = ~/src/imio/scripts-teleservices/build-e-guichet
 insert = default_position = 50.4988;4.7199
 site_option = /var/lib/wcs/tenants/wcs.dev.publik.love/site-options.cfg
-
 wcs_tenant = /var/lib/wcs/tenants/wcs.dev.publik.love
 
 build-e-guichet:
@@ -55,14 +69,14 @@ build-e-guichet:
 	cp ${build-e-guichet}/categories/* ${wcs_tenant}/categories
 	test -s /var/lib/wcs/tenants/wcs.dev.publik.love/datasources || mkdir /var/lib/wcs/tenants/wcs.dev.publik.love/datasources
 	cp ${build-e-guichet}/datasources/* ${wcs_tenant}/datasources
-#	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command runscript ${build-e-guichet}/passerelle/build-api-user.py -d passerelle.dev.publik.love
+	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command runscript ${build-e-guichet}/passerelle/build-api-user.py -d passerelle.dev.publik.love
 	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${build-e-guichet}/datasources/datasources.json
 	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${build-e-guichet}/passerelle/pays.json --import-users
 	/home/${USER}/envs/publik-env-py3/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet}/import-authentic-user.py -d authentic.dev.publik.love
 	/home/${USER}/envs/publik-env-py3/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet}/auth_fedict_var.py -d authentic.dev.publik.love
 	/home/${USER}/envs/publik-env-py3/bin/wcs-manage runscript --vhost=wcs.dev.publik.love ${build-e-guichet}/import-permissions.py full
 	/home/${USER}/envs/publik-env-py3/bin/combo-manage tenant_command import_site -d agent-combo.dev.publik.love ${build-e-guichet}/combo-site/combo-portail-agent-structure.json
-	/home/${USER}/envs/publik-env-py3/bin/combo-manage tenant_command import_site -d agent-combo.dev.publik.love ${build-e-guichet}/combo-site/combo-site-structure-full.json
+	/home/${USER}/envs/publik-env-py3/bin/combo-manage tenant_command import_site -d combo.dev.publik.love ${build-e-guichet}/combo-site/combo-site-structure-full.json
 	/home/${USER}/envs/publik-env-py3/bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet}/hobo_create_variables.py
 
 clean-imio-src:
