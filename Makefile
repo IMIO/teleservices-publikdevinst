@@ -16,12 +16,14 @@ install-utils:
 	code --version
 
 init-themes:
+# Init imio-publik-themes and make themes avalaible in Publik
 	test -s ${folder}/imio-publik-themes || git clone https://git.entrouvert.org/imio-publik-themes.git/ ${folder}/imio-publik-themes
 	test -s /usr/local/share/publik-devinst/themes/imio || sudo ln -s ${folder}/imio-publik-themes /usr/local/share/publik-devinst/themes/imio
 	cd /usr/local/share/publik-devinst/themes/imio;git submodule update --init --recursive;make;cd -
 
 folder = ~/src/imio
 init-imio-src:
+# Fetch all the teleservices related repositories
 	git config --global user.email "daniel.muyshond@imio.be"
 	git config --global user.name "Daniel Muyshond"
 	test -s ${folder} || mkdir ${folder}
@@ -40,7 +42,8 @@ init-imio-src:
 	test -s ${folder}/passerelle-imio-extra-fees || git clone https://git.entrouvert.org/passerelle-imio-extra-fees.git/ ${folder}/passerelle-imio-extra-fees
 	test -s ${folder}/passerelle-imio-aes-meal || git clone git@github.com:IMIO/passerelle-imio-aes-meal.git ${folder}/passerelle-imio-aes-meal
 	test -s ${folder}/passerelle-imio-aes-health || git clone git@github.com:IMIO/passerelle-imio-aes-health.git ${folder}/passerelle-imio-aes-health
-	test -s ${folder}/passerelle-imio-ia-aes || git clone git@github.com:IMIO/passerelle-imio-ia-aes.git 
+	test -s ${folder}/passerelle-imio-ia-aes || git clone git@github.com:IMIO/passerelle-imio-ia-aes.git ${folder}/passerelle-imio-ia-aes
+	test -s ${folder}/passerelle-imio-ia-tech || git clone git@github.com:IMIO/passerelle-imio-ia-tech.git ${folder}/passerelle-imio-ia-tech
 	test -s ${folder}/passerelle-imio-ia-delib || git clone git@github.com:IMIO/passerelle-imio-ia-delib.git ${folder}/passerelle-imio-ia-delib
 	test -s ${folder}/passerelle-imio-liege-lisrue || git clone https://git.entrouvert.org/passerelle-imio-liege-lisrue.git/ ${folder}/passerelle-imio-liege-lisrue
 	test -s ${folder}/passerelle-imio-liege-rn || git clone https://git.entrouvert.org/passerelle-imio-liege-rn.git/ ${folder}/passerelle-imio-liege-rn
@@ -49,14 +52,26 @@ init-imio-src:
 	test -s ${folder}/publik-imio-industrialisation || git clone https://git.entrouvert.org/publik-imio-industrialisation.git/ ${folder}/publik-imio-industrialisation
 	test -s ${folder}/wcs-scripts-teleservices || git clone git@github.com:IMIO/wcs-scripts-teleservices.git ${folder}/wcs-scripts-teleservices
 
-init-ts1-datasources:
+
+init-passerelle-modules:
+	cd ~/src/imio/passerelle-imio-aes-health;~/envs/publik-env-py3/bin/pip install -e .
+	cd ~/src/imio/passerelle-imio-aes-meal;~/envs/publik-env-py3/bin/pip install -e .
+	cd ~/src/imio/passerelle-imio-apims-baec;~/envs/publik-env-py3/bin/pip install -e .
+	cd ~/src/imio/passerelle-imio-extra-fees;~/envs/publik-env-py3/bin/pip install -e .
+	cd ~/src/imio/passerelle-imio-ia-delib;~/envs/publik-env-py3/bin/pip install -e .
+	cd ~/src/imio/passerelle-imio-ia-aes;~/envs/publik-env-py3/bin/pip install -e .
+	cd ~/src/imio/passerelle-imio-ia-tech;~/envs/publik-env-py3/bin/pip install -e .
+	cd ~/src/imio/passerelle-imio-liege-lisrue;~/envs/publik-env-py3/bin/pip install -e .
+	cd ~/src/imio/passerelle-imio-liege-rn;~/envs/publik-env-py3/bin/pip install -e .
+	cd ~/src/imio/passerelle-imio-tax-compute;~/envs/publik-env-py3/bin/pip install -e .
+	cd ~/src/imio/passerelle-imio-ia-tech;~/envs/publik-env-py3/bin/pip install -e .
 	cd ~/src/imio/passerelle-imio-ts1-datasources;~/envs/publik-env-py3/bin/pip install -e .
-	test -s /home/publikdev/.config/publik/settings/passerelle/settings.d/ts1datasources.py || touch /home/publikdev/.config/publik/settings/passerelle/settings.d/ts1datasources.py;echo "if 'passerelle_imio_ts1_datasources' not in INSTALLED_APPS:" >> /home/publikdev/.config/publik/settings/passerelle/settings.d/ts1datasources.py;echo "   INSTALLED_APPS += ('passerelle_imio_ts1_datasources',)" >> /home/publikdev/.config/publik/settings/passerelle/settings.d/ts1datasources.py;echo "   TENANT_APPS += ('passerelle_imio_ts1_datasources',)" >> /home/publikdev/.config/publik/settings/passerelle/settings.d/ts1datasources.py
 	~/envs/publik-env-py3/bin/passerelle-manage migrate_schemas
+# Add modules to INSTALLED_APPS
+	cp -r /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/*.py /home/${USER}/.config/publik/settings/passerelle/settings.d/
+	ls /home/publikdev/.config/publik/settings/passerelle/settings.d/
+# Restart service
 	sudo supervisorctl restart passerelle
-	cd -
-
-
 
 build-e-guichet = ~/src/imio/scripts-teleservices/build-e-guichet
 insert = default_position = 50.4988;4.7199
@@ -64,6 +79,7 @@ site_option = /var/lib/wcs/tenants/wcs.dev.publik.love/site-options.cfg
 wcs_tenant = /var/lib/wcs/tenants/wcs.dev.publik.love
 
 build-e-guichet:
+# Do what the bash script did but translated for Makefile / Publik-dev inst 
 	grep -qxF "${insert}" ${site_option} || sed -i "s/\[options\]/\[options\]\n${insert}/" ${site_option}
 	test -s /var/lib/wcs/tenants/wcs.dev.publik.love/categories || mkdir /var/lib/wcs/tenants/wcs.dev.publik.love/categories
 	cp ${build-e-guichet}/categories/* ${wcs_tenant}/categories
@@ -80,4 +96,4 @@ build-e-guichet:
 	/home/${USER}/envs/publik-env-py3/bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet}/hobo_create_variables.py
 
 clean-imio-src:
-	rm -rf ~/src/imio
+	rm -rf ~/src/imio	
