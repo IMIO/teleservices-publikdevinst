@@ -79,7 +79,7 @@ site_option = /var/lib/wcs/tenants/wcs.dev.publik.love/site-options.cfg
 wcs_tenant = /var/lib/wcs/tenants/wcs.dev.publik.love
 
 build-e-guichet:
-# Do what the bash script did but translated for Makefile / Publik-dev inst 
+# Do what the bash script did but translated for Makefile / Publik-dev inst
 	grep -qxF "${insert}" ${site_option} || sed -i "s/\[options\]/\[options\]\n${insert}/" ${site_option}
 	test -s /var/lib/wcs/tenants/wcs.dev.publik.love/categories || mkdir /var/lib/wcs/tenants/wcs.dev.publik.love/categories
 	cp ${build-e-guichet}/categories/* ${wcs_tenant}/categories
@@ -96,4 +96,4 @@ build-e-guichet:
 	/home/${USER}/envs/publik-env-py3/bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet}/hobo_create_variables.py
 
 clean-imio-src:
-	rm -rf ~/src/imio	
+	rm -rf ~/src/imio
