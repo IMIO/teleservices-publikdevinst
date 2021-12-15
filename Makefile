@@ -2,7 +2,7 @@ install-utils:
 ## VSCode
 # Install dependencies
 	sudo apt update && sudo apt upgrade
-	sudo apt install git vim ansible
+	sudo apt install git vim ansible imagemagick pngquant
 	sudo apt install software-properties-common apt-transport-https curl -y
 # Import GPG keys and Visual Studio repository
 	curl -sSL https://packages.microsoft.com/keys/microsoft.asc -o microsoft.asc
@@ -15,13 +15,14 @@ install-utils:
 	sudo apt update && sudo apt install code -y
 	code --version
 
+folder = ~/src/imio
+
 init-themes:
 # Init imio-publik-themes and make themes avalaible in Publik
 	test -s ${folder}/imio-publik-themes || git clone https://git.entrouvert.org/imio-publik-themes.git/ ${folder}/imio-publik-themes
 	test -s /usr/local/share/publik-devinst/themes/imio || sudo ln -s ${folder}/imio-publik-themes /usr/local/share/publik-devinst/themes/imio
 	cd /usr/local/share/publik-devinst/themes/imio;git submodule update --init --recursive;make;cd -
 
-folder = ~/src/imio
 init-imio-src:
 # Fetch all the teleservices related repositories
 	git config --global user.email "daniel.muyshond@imio.be"
