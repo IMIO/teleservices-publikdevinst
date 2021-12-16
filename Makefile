@@ -1,3 +1,16 @@
+git-config:
+	git config --global user.email "daniel.muyshond@imio.be"
+	git config --global user.name "Daniel Muyshond"
+	git config --global alias.st 'status'
+	git config --global alias.ll 'log --oneline'
+	git config --global alias.cm 'commit -m'
+	git config --global alias.last 'log -1 HEAD --stat' # output last commit
+	git config --global alias.rv 'remote -v'
+	git config --global alias.d 'diff'
+	git config --global alias.gl 'config --global -l' # list all git aliases
+	git config --global alias.se '!git rev-list --all | xargs git grep -F' # search specific strings in your commits
+	git gl
+
 install-utils:
 ## VSCode
 # Install dependencies
@@ -25,8 +38,6 @@ init-themes:
 
 init-imio-src:
 # Fetch all the teleservices related repositories
-	git config --global user.email "daniel.muyshond@imio.be"
-	git config --global user.name "Daniel Muyshond"
 	test -s ${folder} || mkdir ${folder}
 	# common teleservices repositories
 	test -s ${folder}/combo-plugin-imio-townstreet || git clone https://git.entrouvert.org/combo-plugin-imio-townstreet.git/ ${folder}/combo-plugin-imio-townstreet
