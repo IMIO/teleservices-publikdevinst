@@ -41,10 +41,25 @@ init-imio-src:
 	test -s ${folder} || mkdir ${folder}
 	# common teleservices repositories
 	test -s ${folder}/combo-plugin-imio-townstreet || git clone https://git.entrouvert.org/combo-plugin-imio-townstreet.git/ ${folder}/combo-plugin-imio-townstreet
+	test -s ${folder}/documentation-imio || git clone git@gitlab.imio.be:imio/documentation-imio.git ${folder}/documentation-imio
+	test -s ${folder}/documentation-interne || git clone git@gitlab.imio.be:imio/documentation-interne.git ${folder}/documentation-interne
+	test -s ${folder}/imio-api-bewapp-endpoints || git clone git@gitlab.imio.be:imio-api/imio-api-bewapp-endpoints.git ${folder}/imio-api-bewapp-endpoints
+	test -s ${folder}/imio-api-bosa-endpoints || git clone git@gitlab.imio.be:imio-api/imio-api-bosa-endpoints.git ${folder}/imio-api-bosa-endpoints
+	test -s ${folder}/imio-api-imio-aes-endpoints || git clone git@gitlab.imio.be:imio-api/imio-api-imio-aes-endpoints.git ${folder}/imio-api-imio-aes-endpoints
+	test -s ${folder}/imio-api-imio-authentic-endpoints || git clone git@gitlab.imio.be:imio-api/imio-api-imio-authentic-endpoints.git ${folder}/imio-api-imio-authentic-endpoints
+	test -s ${folder}/imio-api-imio-procedures-townstreet-endpoints || git clone git@gitlab.imio.be:imio-api/imio-api-imio-procedures-townstreet-endpoints.git ${folder}/imio-api-imio-procedures-townstreet-endpoints
+	test -s ${folder}/imio-api-imio-taxonomies-endpoints || git clone git@gitlab.imio.be:imio-api/imio-api-imio-taxonomies-endpoints.git ${folder}/imio-api-imio-taxonomies-endpoints
 	test -s ${folder}/imio.behavior.teleservices || git clone git@github.com:IMIO/imio.behavior.teleservices.git ${folder}/imio.behavior.teleservices
 	test -s ${folder}/imio-publik-themes || git clone https://git.entrouvert.org/imio-publik-themes.git/ ${folder}/imio-publik-themes
 	test -s ${folder}/imio-townstreet || git clone git@github.com:IMIO/imio-townstreet.git ${folder}/imio-townstreet
+	test -s ${folder}/imio-townstreet-tests || git clone git@gitlab.imio.be:teleservices/townstreet/imio-townstreet-tests.git ${folder}/imio-townstreet-tests
+	test -s ${folder}/imio-townstreet-maintenance || git clone git@gitlab.imio.be:teleservices/townstreet/imio-townstreet-maintenance.git ${folder}/imio-townstreet-maintenance
 	test -s ${folder}/imio-ts-aes || git clone git@github.com:IMIO/imio-ts-aes.git ${folder}/imio-ts-aes
+	test -s ${folder}/industrialisation || git clone git@gitlab.imio.be:infra/industrialisation.git ${folder}/industrialisation
+	test -s ${folder}/instances-checker || git clone git@gitlab.imio.be:teleservices/instances-checker.git ${folder}/instances-checker
+	test -s ${folder}/issh || git clone git@gitlab.imio.be:infra/issh.git ${folder}/issh
+	test -s ${folder}/jenkins-pipeline-scripts || git clone git@gitlab.imio.be:infra/jenkins/jenkins-pipeline-scripts.git ${folder}/jenkins-pipeline-scripts
+	test -s ${folder}/locust-teleservices || git clone git@gitlab.imio.be:teleservices/locust-teleservices.git ${folder}/locust-teleservices
 	test -s ${folder}/scripts-teleservices || git clone git@github.com:IMIO/scripts-teleservices.git ${folder}/scripts-teleservices
 	test -s ${folder}/teleservices-german-translations || git clone git@github.com:IMIO/teleservices-german-translations.git ${folder}/teleservices-german-translations
 	test -s ${folder}/teleservices-package || git clone git@github.com:IMIO/teleservices-package.git ${folder}/teleservices-package
@@ -62,8 +77,10 @@ init-imio-src:
 	test -s ${folder}/passerelle-imio-tax-compute || git clone https://git.entrouvert.org/passerelle-imio-tax-compute.git/ ${folder}/passerelle-imio-tax-compute
 	test -s ${folder}/passerelle-imio-ts1-datasources || git clone https://git.entrouvert.org/passerelle-imio-ts1-datasources.git/ ${folder}/passerelle-imio-ts1-datasources
 	test -s ${folder}/publik-imio-industrialisation || git clone https://git.entrouvert.org/publik-imio-industrialisation.git/ ${folder}/publik-imio-industrialisation
+	test -s ${folder}/sauron || git clone git@gitlab.imio.be:teleservices/sauron.git ${folder}/sauron
+	test -s ${folder}/simple-form-post-1 || git clone git@gitlab.imio.be:teleservices/testing/simple-form-post-1.git ${folder}/simple-form-post-1
+	test -s ${folder}/simple-form-pull-1 || git clone git@gitlab.imio.be:teleservices/testing/simple-form-pull-1.git ${folder}/simple-form-pull-1
 	test -s ${folder}/wcs-scripts-teleservices || git clone git@github.com:IMIO/wcs-scripts-teleservices.git ${folder}/wcs-scripts-teleservices
-
 
 init-passerelle-modules:
 	cd ~/src/imio/passerelle-imio-aes-health;~/envs/publik-env-py3/bin/pip install -e .
