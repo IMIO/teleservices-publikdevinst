@@ -81,6 +81,9 @@ init-imio-src:
 	test -s ${folder}/simple-form-post-1 || git clone git@gitlab.imio.be:teleservices/testing/simple-form-post-1.git ${folder}/simple-form-post-1
 	test -s ${folder}/simple-form-pull-1 || git clone git@gitlab.imio.be:teleservices/testing/simple-form-pull-1.git ${folder}/simple-form-pull-1
 	test -s ${folder}/wcs-scripts-teleservices || git clone git@github.com:IMIO/wcs-scripts-teleservices.git ${folder}/wcs-scripts-teleservices
+	cp ${folder}/teleservices-publikdevinst/git-pull-recursif.sh ${folder}/git-pull-recursif.sh
+	chmod +x ${folder}/git-pull-recursif.sh
+	echo "✅ All repositories related to iA.Téléservices seems to have been set inside ${folder}\n Whenever you want to recursively git pull all the subdirectories :\n run git-pull-recursif.sh to easily keep all the stuff up to date! Keep up the good work and have a nice day! 🌞"
 
 init-passerelle-modules:
 	cd ~/src/imio/passerelle-imio-aes-health;~/envs/publik-env-py3/bin/pip install -e .
