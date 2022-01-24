@@ -133,5 +133,8 @@ init-publik-imio-industrialisation:
 	cp ~/src/imio/publik-imio-industrialisation/hobo/*.py ~/src/hobo/hobo/environment/management/commands/
 	cp ~/src/imio/publik-imio-industrialisation/wcs/*.py ~/src/wcs/wcs/ctl/
 
+init-teleservices-package:
+		/home/${USER}/envs/publik-env-py3/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${folder}/teleservices-package/teleservices_package
+
 clean-imio-src:
 	rm -rf ~/src/imio
