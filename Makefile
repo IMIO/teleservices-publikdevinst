@@ -16,7 +16,7 @@ install-utils:
 # Install dependencies
 	sudo apt update && sudo apt upgrade
 	sudo apt install git vim ansible imagemagick pngquant
-	sudo apt install software-properties-common apt-transport-https curl -y
+	sudo apt install software-properties-common apt-transport-https curl python3-venv -y
 # Import GPG keys and Visual Studio repository
 	curl -sSL https://packages.microsoft.com/keys/microsoft.asc -o microsoft.asc
 	gpg --no-default-keyring --keyring ./ms_signing_key_temp.gpg --import ./microsoft.asc
