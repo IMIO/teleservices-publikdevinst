@@ -27,6 +27,10 @@ install-utils:
 	# Finally install VSCode and output version
 	sudo apt update && sudo apt install code -y
 	code --version
+# Install Google Chrome
+	wget -nc https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+	sudo apt install ./google-chrome-stable_current_amd64.deb -y
+	rm ./google-chrome-stable_current_amd64.deb
 
 folder = ~/src/imio
 
