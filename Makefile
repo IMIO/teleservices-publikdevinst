@@ -117,10 +117,6 @@ wcs_tenant = /var/lib/wcs/tenants/wcs.dev.publik.love
 build-e-guichet:
 # Do what the bash script did but translated for Makefile / Publik-dev inst
 	grep -qxF "${insert}" ${site_option} || sed -i "s/\[options\]/\[options\]\n${insert}/" ${site_option}
-	test -s /var/lib/wcs/tenants/wcs.dev.publik.love/categories || mkdir /var/lib/wcs/tenants/wcs.dev.publik.love/categories
-	cp ${build-e-guichet}/categories/* ${wcs_tenant}/categories
-	test -s /var/lib/wcs/tenants/wcs.dev.publik.love/datasources || mkdir /var/lib/wcs/tenants/wcs.dev.publik.love/datasources
-	cp ${build-e-guichet}/datasources/* ${wcs_tenant}/datasources
 	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command runscript ${build-e-guichet}/passerelle/build-api-user.py -d passerelle.dev.publik.love
 	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${build-e-guichet}/datasources/datasources.json
 	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${build-e-guichet}/passerelle/pays.json --import-users
