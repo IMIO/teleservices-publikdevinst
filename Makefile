@@ -142,5 +142,12 @@ update-teleservices-package:
 	cd -
 	make init-teleservices-package
 
+init-townstreet:
+	/home/${USER}/envs/publik-env-py3/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${folder}/imio-townstreet/imio_townstreet/
+
+init-townstreet-passerelle:
+	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${folder}/teleservices-publikdevinst/passerelle_elements/export_passerelle-imio-ia-tech_atal-demov6_20220228.json --import-users
+
+
 clean-imio-src:
 	rm -rf ~/src/imio
