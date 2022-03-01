@@ -45,6 +45,14 @@ Le Makefile d'Entr'Ouvert à la racine du repository publik-imio-industrialisati
 
 Fait un git pull des sources initialiées par `make init-imio-src` puis redéploie le package afin de le mettre à jour dans l'instance Publik.
 
+* `init-townstreet`
+
+Utilise publik-imio-industrialisation pour instancier Townstreet tel qu'on le fait en production, mais dans l'instance Publik.
+
+* `init-townstreet-passerelle`
+
+Importe le connecteur passerelle (Atal 6) de test.
+
 * `clean-imio-src`
 
 Supprime tout ce que contiend `~/src/imio`.
