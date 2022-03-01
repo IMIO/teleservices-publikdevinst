@@ -3,13 +3,13 @@
     {
       "@type": "passerelle-resource",
       "resource_type": "passerelle_imio_ia_tech.imio_atal",
-      "title": "Connecteur ATAL 6 (demo)",
+      "title": "Connecteur ATAL 6 (Instance de test)",
       "slug": "atal-demov6",
-      "description": "Connectal ATAL 6 connect\u00e9 \u00e0 leur instance de D\u00e9mo.\r\nPour le d\u00e9veloppement.",
+      "description": "Connectal ATAL 6 connect\u00e9 \u00e0 leur instance de test.\r\nPour le d\u00e9veloppement.",
       "log_level": "INFO",
       "access_rights": [],
-      "base_url": "https://demov6.imio-app.be",
-      "api_key": "IA6L$S!A@H5&L4CVHKRLHIL7K3#@1%H$"
+      "base_url": "https://test-a6.imio-app.be",
+      "api_key": "885DW4#P%IN13KB$DRD006MPQF1IZ01V"
     }
   ]
 }

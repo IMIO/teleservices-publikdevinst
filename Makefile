@@ -116,6 +116,7 @@ wcs_tenant = /var/lib/wcs/tenants/wcs.dev.publik.love
 
 build-e-guichet:
 # Do what the bash script did but translated for Makefile / Publik-dev inst
+# Beware : you must comment the line related to 'build-api-user.py' to build again.
 	grep -qxF "${insert}" ${site_option} || sed -i "s/\[options\]/\[options\]\n${insert}/" ${site_option}
 	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command runscript ${build-e-guichet}/passerelle/build-api-user.py -d passerelle.dev.publik.love
 	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${build-e-guichet}/datasources/datasources.json
