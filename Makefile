@@ -32,7 +32,7 @@ install-utils:
 	sudo apt install ./google-chrome-stable_current_amd64.deb -y
 	rm ./google-chrome-stable_current_amd64.deb
 
-folder = ~/src/imio
+imio_src = ~/src/imio
 
 init-themes:
 # Init imio-publik-themes and make themes avalaible in Publik
