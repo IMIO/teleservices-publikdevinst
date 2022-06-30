@@ -35,15 +35,15 @@ install-utils:
 	sudo apt install ./google-chrome-stable_current_amd64.deb -y
 	rm ./google-chrome-stable_current_amd64.deb
 
-# Install Pycharm EDITION=community|educational|professional
 install-pycharm:
-    sudo apt update
-    sudo apt install snapd
-    sudo systemctl enable snapd --now
-    sudo ln -s /var/lib/snapd/snap /snap
-    sudo snap install pycharm-$(EDITION) --classic --edge
-    sudo ln -s /etc/profile.d/apps-bin-path.sh /etc/X11/Xsession.d/99snap
-    sudo printf "ENV_PATH PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin\n" >> /etc/login.defs
+# Install Pycharm EDITION=community|educational|professional
+	sudo apt update
+	sudo apt install snapd
+	sudo systemctl enable snapd --now
+	sudo ln -s /var/lib/snapd/snap /snap
+	sudo snap install pycharm-$(EDITION) --classic --edge
+	sudo ln -s /etc/profile.d/apps-bin-path.sh /etc/X11/Xsession.d/99snap
+	sudo printf "ENV_PATH PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin\n" >> /etc/login.defs
 
 imio_src = ~/src/imio
 
