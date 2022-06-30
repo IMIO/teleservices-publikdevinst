@@ -107,7 +107,7 @@ init-passerelle-modules:
 	cp -r /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/*.py /home/${USER}/.config/publik/settings/passerelle/settings.d/
 	ls /home/publikdev/.config/publik/settings/passerelle/settings.d/
 # Restart service
-	sudo supervisorctl restart passerelle
+	sudo supervisorctl restart django:passerelle
 
 build-e-guichet = ~/src/imio/scripts-teleservices/build-e-guichet
 insert = default_position = 50.4988;4.7199
