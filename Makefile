@@ -10,6 +10,9 @@ git-config:
 	git config --global alias.gl 'config --global -l' # list all git aliases
 	git config --global alias.se '!git rev-list --all | xargs git grep -F' # search specific strings in your commits
 	git gl
+    # configure global gitignore
+	git config --global core.excludesFile ~/.gitignore
+	printf ".idea/*\n" >> ~/.gitignore
 
 install-utils:
 ## VSCode
@@ -31,6 +34,16 @@ install-utils:
 	wget -nc https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 	sudo apt install ./google-chrome-stable_current_amd64.deb -y
 	rm ./google-chrome-stable_current_amd64.deb
+
+# Install Pycharm EDITION=community|educational|professional
+install-pycharm:
+    sudo apt update
+    sudo apt install snapd
+    sudo systemctl enable snapd --now
+    sudo ln -s /var/lib/snapd/snap /snap
+    sudo snap install pycharm-$(EDITION) --classic --edge
+    sudo ln -s /etc/profile.d/apps-bin-path.sh /etc/X11/Xsession.d/99snap
+    sudo printf "ENV_PATH PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin\n" >> /etc/login.defs
 
 imio_src = ~/src/imio
 
@@ -81,7 +94,6 @@ init-imio-src:
 	test -s ${imio_src}/passerelle-imio-tax-compute || git clone https://git.entrouvert.org/passerelle-imio-tax-compute.git/ ${imio_src}/passerelle-imio-tax-compute
 	test -s ${imio_src}/passerelle-imio-ts1-datasources || git clone https://git.entrouvert.org/passerelle-imio-ts1-datasources.git/ ${imio_src}/passerelle-imio-ts1-datasources
 	test -s ${imio_src}/publik-imio-industrialisation || git clone https://git.entrouvert.org/publik-imio-industrialisation.git/ ${imio_src}/publik-imio-industrialisation
-	test -s ${imio_src}/sauron || git clone git@gitlab.imio.be:teleservices/sauron.git ${imio_src}/sauron
 	test -s ${imio_src}/simple-form-post-1 || git clone git@gitlab.imio.be:teleservices/testing/simple-form-post-1.git ${imio_src}/simple-form-post-1
 	test -s ${imio_src}/simple-form-pull-1 || git clone git@gitlab.imio.be:teleservices/testing/simple-form-pull-1.git ${imio_src}/simple-form-pull-1
 	test -s ${imio_src}/wcs-scripts-teleservices || git clone git@github.com:IMIO/wcs-scripts-teleservices.git ${imio_src}/wcs-scripts-teleservices
@@ -104,8 +116,8 @@ init-passerelle-modules:
 	cd ~/src/imio/passerelle-imio-ts1-datasources;~/envs/publik-env-py3/bin/pip install -e .
 	~/envs/publik-env-py3/bin/passerelle-manage migrate_schemas
 # Add modules to INSTALLED_APPS
-	cp -r /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/*.py /home/${USER}/.config/publik/settings/passerelle/settings.d/
-	ls /home/publikdev/.config/publik/settings/passerelle/settings.d/
+	cp -r ~/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/*.py ~/.config/publik/settings/passerelle/settings.d/
+	ls ~/.config/publik/settings/passerelle/settings.d/
 # Restart service
 	sudo supervisorctl restart django:passerelle
 
