@@ -1,6 +1,6 @@
 git-config:
-	git config --global user.email "daniel.muyshond@imio.be"
-	git config --global user.name "Daniel Muyshond"
+	git config --global user.email "nicolas.selva@imio.be"
+	git config --global user.name "Nicolas Selva"
 	git config --global alias.st 'status'
 	git config --global alias.ll 'log --oneline'
 	git config --global alias.cm 'commit -m'
@@ -10,7 +10,7 @@ git-config:
 	git config --global alias.gl 'config --global -l' # list all git aliases
 	git config --global alias.se '!git rev-list --all | xargs git grep -F' # search specific strings in your commits
 	git gl
-    # configure global gitignore
+# configure global gitignore
 	git config --global core.excludesFile ~/.gitignore
 	printf ".idea/*\n" >> ~/.gitignore
 
@@ -37,13 +37,23 @@ install-utils:
 
 install-pycharm:
 # Install Pycharm EDITION=community|educational|professional
+# make install-pycharm EDITION=professional
 	sudo apt update
 	sudo apt install snapd
 	sudo systemctl enable snapd --now
 	sudo ln -s /var/lib/snapd/snap /snap
 	sudo snap install pycharm-$(EDITION) --classic --edge
 	sudo ln -s /etc/profile.d/apps-bin-path.sh /etc/X11/Xsession.d/99snap
-	sudo printf "ENV_PATH PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin\n" >> /etc/login.defs
+	echo "🚩️ Open /etc/login.defs and add paste at the end 🚩️"
+	echo "ENV_PATH PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+
+install-st:
+# Install sublimetext
+	sudo apt update
+	wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+	echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+	sudo apt update
+	sudo apt-get install sublime-text
 
 imio_src = ~/src/imio
 
