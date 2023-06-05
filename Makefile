@@ -36,15 +36,14 @@ imio_src = ~/src/imio
 
 init-themes:
 # Init imio-publik-themes and make themes avalaible in Publik
-	test -s ${imio_src}/imio-publik-themes || git clone https://git.entrouvert.org/imio-publik-themes.git/ ${imio_src}/imio-publik-themes
+	test -s ${imio_src}/imio-publik-themes || git clone gitea@git.entrouvert.org:entrouvert/imio-publik-themes.git ${imio_src}/imio-publik-themes
 	test -s /usr/local/share/publik-devinst/themes/imio || sudo ln -s ${imio_src}/imio-publik-themes /usr/local/share/publik-devinst/themes/imio
 	cd /usr/local/share/publik-devinst/themes/imio;git submodule update --init --recursive;make;cd -
 
 init-imio-src:
 # Fetch all the teleservices related repositories
 	test -s ${imio_src} || mkdir ${imio_src}
-	# common teleservices repositories
-	test -s ${imio_src}/combo-plugin-imio-townstreet || git clone https://git.entrouvert.org/combo-plugin-imio-townstreet.git/ ${imio_src}/combo-plugin-imio-townstreet
+	test -s ${imio_src}/combo-plugin-imio-townstreet || git clone gitea@git.entrouvert.org:entrouvert/combo-plugin-imio-townstreet.git/ ${imio_src}/combo-plugin-imio-townstreet
 	test -s ${imio_src}/documentation-imio || git clone git@gitlab.imio.be:imio/documentation-imio.git ${imio_src}/documentation-imio
 	test -s ${imio_src}/documentation-interne || git clone git@gitlab.imio.be:imio/documentation-interne.git ${imio_src}/documentation-interne
 	test -s ${imio_src}/imio-api-bewapp-endpoints || git clone git@gitlab.imio.be:imio-api/imio-api-bewapp-endpoints.git ${imio_src}/imio-api-bewapp-endpoints
@@ -54,7 +53,7 @@ init-imio-src:
 	test -s ${imio_src}/imio-api-imio-procedures-townstreet-endpoints || git clone git@gitlab.imio.be:imio-api/imio-api-imio-procedures-townstreet-endpoints.git ${imio_src}/imio-api-imio-procedures-townstreet-endpoints
 	test -s ${imio_src}/imio-api-imio-taxonomies-endpoints || git clone git@gitlab.imio.be:imio-api/imio-api-imio-taxonomies-endpoints.git ${imio_src}/imio-api-imio-taxonomies-endpoints
 	test -s ${imio_src}/imio.behavior.teleservices || git clone git@github.com:IMIO/imio.behavior.teleservices.git ${imio_src}/imio.behavior.teleservices
-	test -s ${imio_src}/imio-publik-themes || git clone https://git.entrouvert.org/imio-publik-themes.git/ ${imio_src}/imio-publik-themes
+	test -s ${imio_src}/imio-publik-themes || git clone gitea@git.entrouvert.org:entrouvert/imio-publik-themes.git ${imio_src}/imio-publik-themes
 	test -s ${imio_src}/imio-townstreet || git clone git@github.com:IMIO/imio-townstreet.git ${imio_src}/imio-townstreet
 	test -s ${imio_src}/imio-townstreet-tests || git clone git@gitlab.imio.be:teleservices/townstreet/imio-townstreet-tests.git ${imio_src}/imio-townstreet-tests
 	test -s ${imio_src}/imio-townstreet-maintenance || git clone git@gitlab.imio.be:teleservices/townstreet/imio-townstreet-maintenance.git ${imio_src}/imio-townstreet-maintenance
@@ -69,18 +68,21 @@ init-imio-src:
 	test -s ${imio_src}/teleservices-package || git clone git@github.com:IMIO/teleservices-package.git ${imio_src}/teleservices-package
 	test -s ${imio_src}/teleservices-publikdevinst || git clone git@github.com:IMIO/teleservices-publikdevinst.git ${imio_src}/teleservices-publikdevinst
 	test -s ${imio_src}/teleservices-scripts-selenium || git clone git@github.com:IMIO/teleservices-scripts-selenium.git ${imio_src}/teleservices-scripts-selenium
+	test -s ${imio_src}/passerelle-imio-abiware || git clone git@github.com:IMIO/passerelle-imio-abiware.git ${imio_src}/passerelle-imio-abiware
 	test -s ${imio_src}/passerelle-imio-apims-baec || git clone git@github.com:IMIO/passerelle-imio-apims-baec.git ${imio_src}/passerelle-imio-apims-baec
-	test -s ${imio_src}/passerelle-imio-extra-fees || git clone https://git.entrouvert.org/passerelle-imio-extra-fees.git/ ${imio_src}/passerelle-imio-extra-fees
+	test -s ${imio_src}/passerelle-imio-extra-fees || git clone gitea@git.entrouvert.org:entrouvert/passerelle-imio-extra-fees.git/ ${imio_src}/passerelle-imio-extra-fees
 	test -s ${imio_src}/passerelle-imio-aes-meal || git clone git@github.com:IMIO/passerelle-imio-aes-meal.git ${imio_src}/passerelle-imio-aes-meal
 	test -s ${imio_src}/passerelle-imio-aes-health || git clone git@github.com:IMIO/passerelle-imio-aes-health.git ${imio_src}/passerelle-imio-aes-health
 	test -s ${imio_src}/passerelle-imio-ia-aes || git clone git@github.com:IMIO/passerelle-imio-ia-aes.git ${imio_src}/passerelle-imio-ia-aes
 	test -s ${imio_src}/passerelle-imio-ia-tech || git clone git@github.com:IMIO/passerelle-imio-ia-tech.git ${imio_src}/passerelle-imio-ia-tech
 	test -s ${imio_src}/passerelle-imio-ia-delib || git clone git@github.com:IMIO/passerelle-imio-ia-delib.git ${imio_src}/passerelle-imio-ia-delib
-	test -s ${imio_src}/passerelle-imio-liege-lisrue || git clone https://git.entrouvert.org/passerelle-imio-liege-lisrue.git/ ${imio_src}/passerelle-imio-liege-lisrue
-	test -s ${imio_src}/passerelle-imio-liege-rn || git clone https://git.entrouvert.org/passerelle-imio-liege-rn.git/ ${imio_src}/passerelle-imio-liege-rn
-	test -s ${imio_src}/passerelle-imio-tax-compute || git clone https://git.entrouvert.org/passerelle-imio-tax-compute.git/ ${imio_src}/passerelle-imio-tax-compute
-	test -s ${imio_src}/passerelle-imio-ts1-datasources || git clone https://git.entrouvert.org/passerelle-imio-ts1-datasources.git/ ${imio_src}/passerelle-imio-ts1-datasources
-	test -s ${imio_src}/publik-imio-industrialisation || git clone https://git.entrouvert.org/publik-imio-industrialisation.git/ ${imio_src}/publik-imio-industrialisation
+	test -s ${imio_src}/passerelle-imio-liege-lisrue || git clone gitea@git.entrouvert.org:entrouvert/passerelle-imio-liege-lisrue.git/ ${imio_src}/passerelle-imio-liege-lisrue
+	test -s ${imio_src}/passerelle-imio-liege-rn || git clone gitea@git.entrouvert.org:entrouvert/passerelle-imio-liege-rn.git ${imio_src}/passerelle-imio-liege-rn
+	test -s ${imio_src}/passerelle-imio-sso-agents || git clone git@github.com:IMIO/passerelle-imio-sso-agents.git/ ${imio_src}/passerelle-imio-sso-agents
+	test -s ${imio_src}/passerelle-imio-tax-compute || git clone gitea@git.entrouvert.org:entrouvert/passerelle-imio-tax-compute.git/ ${imio_src}/passerelle-imio-tax-compute
+	test -s ${imio_src}/passerelle-imio-ts1-datasources || git clone gitea@git.entrouvert.org:entrouvert/passerelle-imio-ts1-datasources.git/ ${imio_src}/passerelle-imio-ts1-datasources
+	test -s ${imio_src}/passerelle-imio-wca|| git clone git@github.com:IMIO/passerelle-imio-wca.git ${imio_src}/passerelle-imio-wca
+	test -s ${imio_src}/publik-imio-industrialisation || git clone gitea@git.entrouvert.org:entrouvert/publik-imio-industrialisation.git/ ${imio_src}/publik-imio-industrialisation
 	test -s ${imio_src}/sauron || git clone git@gitlab.imio.be:teleservices/sauron.git ${imio_src}/sauron
 	test -s ${imio_src}/simple-form-post-1 || git clone git@gitlab.imio.be:teleservices/testing/simple-form-post-1.git ${imio_src}/simple-form-post-1
 	test -s ${imio_src}/simple-form-pull-1 || git clone git@gitlab.imio.be:teleservices/testing/simple-form-pull-1.git ${imio_src}/simple-form-pull-1
