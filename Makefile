@@ -1,15 +1,35 @@
-git-config:
-	git config --global user.email "daniel.muyshond@imio.be"
-	git config --global user.name "Daniel Muyshond"
-	git config --global alias.st 'status'
-	git config --global alias.ll 'log --oneline'
-	git config --global alias.cm 'commit -m'
-	git config --global alias.last 'log -1 HEAD --stat' # output last commit
-	git config --global alias.rv 'remote -v'
-	git config --global alias.d 'diff'
-	git config --global alias.gl 'config --global -l' # list all git aliases
-	git config --global alias.se '!git rev-list --all | xargs git grep -F' # search specific strings in your commits
-	git gl
+imio_src = ~/src/imio
+build-e-guichet = ~/src/imio/scripts-teleservices/build-e-guichet
+insert = default_position = 50.4988;4.7199
+site_option = /var/lib/wcs/tenants/wcs.dev.publik.love/site-options.cfg
+wcs_tenant = /var/lib/wcs/tenants/wcs.dev.publik.love
+
+help:
+# list commands
+	@echo "help: list commands"
+	@echo "install: install dependencies"
+	@echo "install-utils: install utils"
+	@echo "init-themes: init imio-publik-themes"
+	@echo "init-imio-src: init imio repositories listed in the current Makefile in ~/src/${USER}/"
+	@echo "init-passerelle-modules"
+	@echo "build-e-guichet"
+	@echo "init-publik-imio-industrialisation"
+	@echo "init-teleservices-package"
+	@echo "init-portail-parent"
+	@echo "update-teleservices-package"
+	@echo "init-townstreet"
+	@echo "init-townstreet-passerelle"
+	@echo "init-dev-api-access"
+	@echo "update-publikdevinst"
+	@echo "clean-imio-src"
+	@echo "git-config"
+	@echo "-----------------------"
+	@echo "Variables you can custom editing this Makefile:"
+	@echo "imio_src = ${imio_src}"
+	@echo "build-e-guichet = ${build-e-guichet}"
+	@echo "insert = ${insert}"
+	@echo "site_option = ${/var/lib/wcs/tenants/wcs.dev.publik.love/site-options.cfg}"
+	@echo "wcs_tenant = ${wcs_tenant}"
 
 install-utils:
 ## VSCode
@@ -31,8 +51,6 @@ install-utils:
 	wget -nc https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 	sudo apt install ./google-chrome-stable_current_amd64.deb -y
 	rm ./google-chrome-stable_current_amd64.deb
-
-imio_src = ~/src/imio
 
 init-themes:
 # Init imio-publik-themes and make themes avalaible in Publik
@@ -113,11 +131,6 @@ init-passerelle-modules:
 	~/envs/publik-env-py3/bin/passerelle-manage migrate_schemas
 # Restart service
 	sudo supervisorctl restart django:passerelle
-
-build-e-guichet = ~/src/imio/scripts-teleservices/build-e-guichet
-insert = default_position = 50.4988;4.7199
-site_option = /var/lib/wcs/tenants/wcs.dev.publik.love/site-options.cfg
-wcs_tenant = /var/lib/wcs/tenants/wcs.dev.publik.love
 
 build-e-guichet:
 # Do what the bash script did but translated for Makefile / Publik-dev inst
