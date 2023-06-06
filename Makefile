@@ -23,7 +23,7 @@ help:
 	@echo "update-publikdevinst"
 	@echo "clean-imio-src"
 	@echo "git-config"
-	@echo "-----------------------"
+	@echo "\n"
 	@echo "Variables you can custom editing this Makefile:"
 	@echo "imio_src = ${imio_src}"
 	@echo "build-e-guichet = ${build-e-guichet}"
@@ -124,7 +124,7 @@ init-passerelle-modules:
 	cd ~/src/imio/passerelle-imio-ia-tech;~/envs/publik-env-py3/bin/pip install -e .
 	cd ~/src/imio/passerelle-imio-sso-agents;~/envs/publik-env-py3/bin/pip install -e .
 	cd ~/src/imio/passerelle-imio-ts1-datasources;~/envs/publik-env-py3/bin/pip install -e .
-	cd ~/src/imio/passerelle-imio-wca;~/envs/publik-env-py3/bin/pip install -e .
+#	cd ~/src/imio/passerelle-imio-wca;~/envs/publik-env-py3/bin/pip install -e .
 # Add modules to INSTALLED_APPS
 	cp -r /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/*.py /home/${USER}/.config/publik/settings/passerelle/settings.d/
 # Migrate passerelle schemas
