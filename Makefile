@@ -1,35 +1,21 @@
 imio_src = ~/src/imio
-build-e-guichet = ~/src/imio/scripts-teleservices/build-e-guichet
-insert = default_position = 50.4988;4.7199
-site_option = /var/lib/wcs/tenants/wcs.dev.publik.love/site-options.cfg
+build-e-guichet = ~/src/imio/scripts-teleservices/scripts_teleservices/build-e-guichet/datasources/passerelle_legacy_motifs_et_destinations.json
 wcs_tenant = /var/lib/wcs/tenants/wcs.dev.publik.love
+publik-env-py3 = /home/${USER}/envs/publik-env-py3/
+build-e-guichet_path = /home/${USER}/src/imio/scripts-teleservices/scripts_teleservices/build-e-guichet/
 
 help:
 # list commands
-	@echo "help: list commands"
-	@echo "install: install dependencies"
-	@echo "install-utils: install utils"
-	@echo "init-themes: init imio-publik-themes"
-	@echo "init-imio-src: init imio repositories listed in the current Makefile in ~/src/${USER}/"
-	@echo "init-passerelle-modules"
-	@echo "build-e-guichet"
-	@echo "init-publik-imio-industrialisation"
-	@echo "init-teleservices-package"
-	@echo "init-portail-parent"
-	@echo "update-teleservices-package"
-	@echo "init-townstreet"
-	@echo "init-townstreet-passerelle"
-	@echo "init-dev-api-access"
-	@echo "update-publikdevinst"
-	@echo "clean-imio-src"
-	@echo "git-config"
-	@echo "\n"
-	@echo "Variables you can custom editing this Makefile:"
-	@echo "imio_src = ${imio_src}"
-	@echo "build-e-guichet = ${build-e-guichet}"
-	@echo "insert = ${insert}"
-	@echo "site_option = ${/var/lib/wcs/tenants/wcs.dev.publik.love/site-options.cfg}"
-	@echo "wcs_tenant = ${wcs_tenant}"
+	@echo "- make init-imio-src: Fetch all the teleservices related repositories (see Makefile for details)"
+	@echo "- make init-passerelle-modules: Install the passerelle modules in dev mode using publik-env-py3 (Entr'Ouvert venv used by publik-devinst, see Makefile for details)"
+	@echo "  This will also do : cp -r /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/*.py /home/${USER}/.config/publik/settings/passerelle/settings.d/ do add theses packages to relevant django INSTALLED_APPS."
+	@echo "- make migrate-passerelle-schemas: Migrate the passerelle schemas."
+	@echo "  This will run '~/envs/publik-env-py3/bin/passerelle-manage migrate_schemas' to properly make passerelle modules available in the Publik backoffice."
+	@echo "  Then it will restart the django service using 'sudo supervisorctl restart django:passerelle'."
+	@echo "- make set-default-position: Patch site-options.json to apply a lat/lon (Geodata) default_position setting under [options]."
+	@echo "- make import-passerelle-motifs-et-destinations-ts1: Import legacy 'ts1_datasource' passerelle module (motifs et destinations)..."
+	@echo "- make create-passerelle-api-user-tout-le-monde: Create passerelle API user 'tout-le-monde'"
+	@echo "- make create-passerelle-pays: Create "Pays" passerelle"
 
 install-utils:
 ## VSCode
@@ -125,32 +111,57 @@ init-passerelle-modules:
 	cd ~/src/imio/passerelle-imio-sso-agents;~/envs/publik-env-py3/bin/pip install -e .
 	cd ~/src/imio/passerelle-imio-ts1-datasources;~/envs/publik-env-py3/bin/pip install -e .
 	cd ~/src/imio/passerelle-imio-wca;~/envs/publik-env-py3/bin/pip install -e .
-# Add modules to INSTALLED_APPS
 	cp -r /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/*.py /home/${USER}/.config/publik/settings/passerelle/settings.d/
-# Migrate passerelle schemas
-	~/envs/publik-env-py3/bin/passerelle-manage migrate_schemas
-# Restart service
-	sudo supervisorctl restart django:passerelle
+
 
 migrate-passerelle-schemas:
-# Migrate passerelle schemas
 	~/envs/publik-env-py3/bin/passerelle-manage migrate_schemas
-# Restart service
 	sudo supervisorctl restart django:passerelle
+
+# Define variables for default_position settings (patching site-options.cfg)
+# And set default position settings after '[options]' in the site-options.cfg file
+default_position_settings = default_position = 50.4988;4.7199
+site_option_path = /var/lib/wcs/tenants/wcs.dev.publik.love/site-options.cfg
+
+add-default-pos-settings:
+	if grep -q "\[options\]" ${site_option_path}; then \
+		grep -qxF "${default_position_settings}" ${site_option_path} || sed -i "/\[options\]/a\\${default_position_settings}" ${site_option_path}; \
+	else \
+		echo "❌ '[options]' not found in ${site_option_path}, cannot set default position."; \
+	fi
+
+verify-default-pos-settings:
+	if grep -qxF "${default_position_settings}" ${site_option_path}; then \
+		echo "✅ Default position set successfully."; \
+	else \
+		echo "❌ Failed to set default position."; \
+	fi
+
+set-default-position: add-default-pos-settings verify-default-pos-settings
+
+# Import legacy "ts1_datasource" passerelle
+# module (motifs et destinations)
+import-passerelle-motifs-et-destinations-ts1:
+	@echo "Importing legacy 'ts1_datasource' passerelle module (motifs et destinations)..."
+	${publik-env-py3}/bin/passerelle-manage tenant_command import_site --overwrite -d passerelle.dev.publik.love /home/${USER}/src/imio/scripts-teleservices/scripts_teleservices/build-e-guichet/datasources/passerelle_legacy_motifs_et_destinations.json
+
+create-passerelle-api-user-tout-le-monde:
+	@echo "Creating passerelle API user 'tout-le-monde'..."
+	${publik-env-py3}/bin/passerelle-manage tenant_command runscript ${build-e-guichet_path}/passerelle/build-api-user.py -d passerelle.dev.publik.love
+
+create-passerelle-pays:
+	@echo "Creating passerelle pays..."
+	${publik-env-py3}/bin/passerelle-manage tenant_command import_site --overwrite --import-users -d passerelle.dev.publik.love ${build-e-guichet_path}/passerelle/pays.json
 
 build-e-guichet:
 # Do what the bash script did but translated for Makefile / Publik-dev inst
 # Beware : you must comment the line related to 'build-api-user.py' to build again.
-	grep -qxF "${insert}" ${site_option} || sed -i "s/\[options\]/\[options\]\n${insert}/" ${site_option}
-#	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command runscript ${build-e-guichet}/passerelle/build-api-user.py -d passerelle.dev.publik.love
-	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${build-e-guichet}/datasources/datasources.json
-	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${build-e-guichet}/passerelle/pays.json --import-users
-	/home/${USER}/envs/publik-env-py3/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet}/import-authentic-user.py -d authentic.dev.publik.love
-	/home/${USER}/envs/publik-env-py3/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet}/auth_fedict_var.py -d authentic.dev.publik.love
-	/home/${USER}/envs/publik-env-py3/bin/wcs-manage runscript --vhost=wcs.dev.publik.love ${build-e-guichet}/import-permissions.py full
-	/home/${USER}/envs/publik-env-py3/bin/combo-manage tenant_command import_site -d agent-combo.dev.publik.love ${build-e-guichet}/combo-site/combo-portail-agent-structure.json
-	/home/${USER}/envs/publik-env-py3/bin/combo-manage tenant_command import_site -d combo.dev.publik.love ${build-e-guichet}/combo-site/combo-site-structure-full.json
-	/home/${USER}/envs/publik-env-py3/bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet}/hobo_create_variables.py
+	${publik-env-py3}/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet_path}/import-authentic-user.py -d authentic.dev.publik.love
+	${publik-env-py3}/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet_path}/auth_fedict_var.py -d authentic.dev.publik.love
+	${publik-env-py3}/bin/wcs-manage runscript --vhost=wcs.dev.publik.love ${build-e-guichet_path}/import-permissions.py full
+	${publik-env-py3}/bin/combo-manage tenant_command import_site -d agent-combo.dev.publik.love ${build-e-guichet_path}/combo-site/combo-portail-agent-structure.json
+	${publik-env-py3}/bin/combo-manage tenant_command import_site -d combo.dev.publik.love ${build-e-guichet_path}/combo-site/combo-site-structure-full.json
+	${publik-env-py3}/bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet_path}/hobo_create_variables.py
 
 init-publik-imio-industrialisation:
 # publik-imio-industrialisation make install does not work with publik-devinst (see #57805)
@@ -159,10 +170,10 @@ init-publik-imio-industrialisation:
 	cp ~/src/imio/publik-imio-industrialisation/wcs/*.py ~/src/wcs/wcs/ctl/
 
 init-teleservices-package:
-	/home/${USER}/envs/publik-env-py3/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/teleservices-package/teleservices_package
+	${publik-env-py3}/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/teleservices-package/teleservices_package
 
 init-portail-parent:
-	/home/${USER}/envs/publik-env-py3/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/imio-ts-aes/imio_ts_aes
+	${publik-env-py3}/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/imio-ts-aes/imio_ts_aes
 
 update-teleservices-package:
 	cd ~/src/imio/teleservices-package
@@ -171,16 +182,17 @@ update-teleservices-package:
 	make init-teleservices-package
 
 init-townstreet:
-	/home/${USER}/envs/publik-env-py3/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/imio-townstreet/imio_townstreet/
+	${publik-env-py3}/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/imio-townstreet/imio_townstreet/
 
 init-townstreet-passerelle:
-	/home/${USER}/envs/publik-env-py3/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${imio_src}/teleservices-publikdevinst/passerelle_elements/export_passerelle-imio-ia-tech_atal-demov6_20220228.json --import-users
+	${publik-env-py3}/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${imio_src}/teleservices-publikdevinst/passerelle_elements/export_passerelle-imio-ia-tech_atal-demov6_20220228.json --import-users
 
 init-dev-api-access:
 	test -s /var/lib/wcs/tenants/wcs.dev.publik.love/apiaccess/1 || cp ${imio_src}/teleservices-publikdevinst/api_access/1 /var/lib/wcs/tenants/wcs.dev.publik.love/apiaccess/1
 
 update-publikdevinst:
 	cd /home/${USER}/publik-devinst && git pull && ansible-playbook -K -i inventory.yml install.yml && cd -
+
 
 clean-imio-src:
 	rm -rf ~/src/imio
