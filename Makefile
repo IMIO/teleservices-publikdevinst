@@ -7,7 +7,7 @@ build-e-guichet_path = /home/${USER}/src/imio/scripts-teleservices/scripts_teles
 help:
 # list commands
 	@echo "- make init-imio-src: Fetch all the teleservices related repositories (see Makefile for details)"
-	@echo "- make init-passerelle-modules: Install the passerelle modules in dev mode using publik-env-py3 (Entr'Ouvert venv used by publik-devinst, see Makefile for details)"
+	@echo "- make install-passerelle-modules-with-dev-mode: Install the passerelle modules in dev mode using publik-env-py3 (Entr'Ouvert venv used by publik-devinst, see Makefile for details)"
 	@echo "  This will also do : cp -r /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/*.py /home/${USER}/.config/publik/settings/passerelle/settings.d/ do add theses packages to relevant django INSTALLED_APPS."
 	@echo "- make migrate-passerelle-schemas: Migrate the passerelle schemas."
 	@echo "  This will run '~/envs/publik-env-py3/bin/passerelle-manage migrate_schemas' to properly make passerelle modules available in the Publik backoffice."
@@ -17,26 +17,6 @@ help:
 	@echo "- make create-passerelle-api-user-tout-le-monde: Create passerelle API user 'tout-le-monde'"
 	@echo "- make create-passerelle-pays: Create "Pays" passerelle"
 
-install-utils:
-## VSCode
-# Install dependencies
-	sudo apt update && sudo apt upgrade
-	sudo apt install git vim ansible imagemagick pngquant
-	sudo apt install software-properties-common apt-transport-https curl python3-venv -y
-# Import GPG keys and Visual Studio repository
-	curl -sSL https://packages.microsoft.com/keys/microsoft.asc -o microsoft.asc
-	gpg --no-default-keyring --keyring ./ms_signing_key_temp.gpg --import ./microsoft.asc
-	gpg --no-default-keyring --keyring ./ms_signing_key_temp.gpg --export > ./ms_signing_key.gpg
-	sudo mv ms_signing_key.gpg /etc/apt/trusted.gpg.d/
-# Import the VSCode source repository
-	echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
-	# Finally install VSCode and output version
-	sudo apt update && sudo apt install code -y
-	code --version
-# Install Google Chrome
-	wget -nc https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-	sudo apt install ./google-chrome-stable_current_amd64.deb -y
-	rm ./google-chrome-stable_current_amd64.deb
 
 init-themes:
 # Init imio-publik-themes and make themes avalaible in Publik
@@ -95,7 +75,9 @@ init-imio-src:
 	chmod +x ${imio_src}/git-pull-recursif.sh
 	echo "✅ All repositories related to iA.Téléservices seems to have been set inside ${imio_src}\n Whenever you want to recursively git pull all the subdirectories :\n run git-pull-recursif.sh to easily keep all the stuff up to date! Keep up the good work and have a nice day! 🌞"
 
-init-passerelle-modules:
+# This will install all the modules in dev mode
+# with the publik-env-py3 virtualenv and pip
+install-passerelle-modules-with-dev-mode:
 	cd ~/src/imio/passerelle-imio-abiware;~/envs/publik-env-py3/bin/pip install -e .
 	cd ~/src/imio/passerelle-imio-aes-health;~/envs/publik-env-py3/bin/pip install -e .
 	cd ~/src/imio/passerelle-imio-aes-meal;~/envs/publik-env-py3/bin/pip install -e .
@@ -113,7 +95,8 @@ init-passerelle-modules:
 	cd ~/src/imio/passerelle-imio-wca;~/envs/publik-env-py3/bin/pip install -e .
 	cp -r /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/*.py /home/${USER}/.config/publik/settings/passerelle/settings.d/
 
-
+# This will apply django migrations for all the modules
+# using publik-env-py3/bin/passerelle-manage migrate_schemas
 migrate-passerelle-schemas:
 	~/envs/publik-env-py3/bin/passerelle-manage migrate_schemas
 	sudo supervisorctl restart django:passerelle
