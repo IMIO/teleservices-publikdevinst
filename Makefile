@@ -16,6 +16,13 @@ help:
 	@echo "- make import-passerelle-motifs-et-destinations-ts1: Import legacy 'ts1_datasource' passerelle module (motifs et destinations)..."
 	@echo "- make create-passerelle-api-user-tout-le-monde: Create passerelle API user 'tout-le-monde'"
 	@echo "- make create-passerelle-pays: Create "Pays" passerelle"
+	@echo "- make create-hobo-variables: Create Hobo variables"
+	@echo "- make init-publik-imio-industrialisation: Make it work on a fresh publik-devinst."
+	@echo "- make install-teleservices-package: Install teleservices package in publik-devinst."
+	@echo "- make init-portail-parent: Install portail-parent package in publik-devinst."
+	@echo "- make update-teleservices-package: Update teleservices package in publik-devinst."
+	@echo "- make install-townstreet: Install townstreet package in publik-devinst."
+	@echo "- make import-townstreet-passerelle: Import townstreet passerelle module."
 
 
 init-themes:
@@ -141,12 +148,12 @@ create-hobo-variables:
 	${publik-env-py3}bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet_path}/hobo_create_variables.py
 
 init-publik-imio-industrialisation:
-# publik-imio-industrialisation make install does not work with publik-devinst (see #57805)
+# publik-imio-industrialisation make install does not install-teleservices-packagework with publik-devinst (see #57805)
 	cp ~/src/imio/publik-imio-industrialisation/combo/*.py ~/src/combo/combo/data/management/commands/
 	cp ~/src/imio/publik-imio-industrialisation/hobo/*.py ~/src/hobo/hobo/environment/management/commands/
 	cp ~/src/imio/publik-imio-industrialisation/wcs/*.py ~/src/wcs/wcs/ctl/
 
-init-teleservices-package:
+install-teleservices-package:
 	${publik-env-py3}bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/teleservices-package/teleservices_package
 
 init-portail-parent:
@@ -156,20 +163,10 @@ update-teleservices-package:
 	cd ~/src/imio/teleservices-package
 	git pull
 	cd -
-	make init-teleservices-package
+	make install-teleservices-package
 
-init-townstreet:
+install-townstreet:
 	${publik-env-py3}bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/imio-townstreet/imio_townstreet/
 
-init-townstreet-passerelle:
+import-townstreet-passerelle:
 	${publik-env-py3}bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${imio_src}/teleservices-publikdevinst/passerelle_elements/export_passerelle-imio-ia-tech_atal-demov6_20220228.json --import-users
-
-init-dev-api-access:
-	test -s /var/lib/wcs/tenants/wcs.dev.publik.love/apiaccess/1 || cp ${imio_src}/teleservices-publikdevinst/api_access/1 /var/lib/wcs/tenants/wcs.dev.publik.love/apiaccess/1
-
-update-publikdevinst:
-	cd /home/${USER}/publik-devinst && git pull && ansible-playbook -K -i inventory.yml install.yml && cd -
-
-
-clean-imio-src:
-	rm -rf ~/src/imio
