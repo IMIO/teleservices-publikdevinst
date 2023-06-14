@@ -126,29 +126,19 @@ set-default-position: add-default-pos-settings verify-default-pos-settings
 # module (motifs et destinations)
 import-passerelle-motifs-et-destinations-ts1:
 	@echo "Importing legacy 'ts1_datasource' passerelle module (motifs et destinations)..."
-	${publik-env-py3}/bin/passerelle-manage tenant_command import_site --overwrite -d passerelle.dev.publik.love /home/${USER}/src/imio/scripts-teleservices/scripts_teleservices/build-e-guichet/datasources/passerelle_legacy_motifs_et_destinations.json
+	${publik-env-py3}bin/passerelle-manage tenant_command import_site --overwrite -d passerelle.dev.publik.love /home/${USER}/src/imio/scripts-teleservices/scripts_teleservices/build-e-guichet/datasources/passerelle_legacy_motifs_et_destinations.json
 
 create-passerelle-api-user-tout-le-monde:
 	@echo "Creating passerelle API user 'tout-le-monde'..."
-	${publik-env-py3}/bin/passerelle-manage tenant_command runscript ${build-e-guichet_path}/passerelle/build-api-user.py -d passerelle.dev.publik.love
+	${publik-env-py3}bin/passerelle-manage tenant_command runscript ${build-e-guichet_path}/passerelle/build-api-user.py -d passerelle.dev.publik.love
 
 create-passerelle-pays:
 	@echo "Creating passerelle pays..."
-	${publik-env-py3}/bin/passerelle-manage tenant_command import_site --overwrite --import-users -d passerelle.dev.publik.love ${build-e-guichet_path}/passerelle/pays.json
+	${publik-env-py3}bin/passerelle-manage tenant_command import_site --overwrite --import-users -d passerelle.dev.publik.love ${build-e-guichet_path}/passerelle/pays.json
 
 create-hobo-variables:
 	@echo "Creating hobo variables..."
-	${publik-env-py3}/bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet_path}/hobo_create_variables.py
-
-build-e-guichet:
-# Do what the bash script did but translated for Makefile / Publik-dev inst
-# Beware : you must comment the line related to 'build-api-user.py' to build again.
-#	${publik-env-py3}/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet_path}/import-authentic-user.py -d authentic.dev.publik.love
-#	${publik-env-py3}/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet_path}/auth_fedict_var.py -d authentic.dev.publik.love
-#	${publik-env-py3}/bin/wcs-manage runscript --vhost=wcs.dev.publik.love ${build-e-guichet_path}/import-permissions.py full
-#	${publik-env-py3}/bin/combo-manage tenant_command import_site -d agent-combo.dev.publik.love ${build-e-guichet_path}/combo-site/combo-portail-agent-structure.json
-#	${publik-env-py3}/bin/combo-manage tenant_command import_site -d combo.dev.publik.love ${build-e-guichet_path}/combo-site/combo-site-structure-full.json
-	${publik-env-py3}/bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet_path}/hobo_create_variables.py
+	${publik-env-py3}bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet_path}/hobo_create_variables.py
 
 init-publik-imio-industrialisation:
 # publik-imio-industrialisation make install does not work with publik-devinst (see #57805)
@@ -157,10 +147,10 @@ init-publik-imio-industrialisation:
 	cp ~/src/imio/publik-imio-industrialisation/wcs/*.py ~/src/wcs/wcs/ctl/
 
 init-teleservices-package:
-	${publik-env-py3}/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/teleservices-package/teleservices_package
+	${publik-env-py3}bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/teleservices-package/teleservices_package
 
 init-portail-parent:
-	${publik-env-py3}/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/imio-ts-aes/imio_ts_aes
+	${publik-env-py3}bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/imio-ts-aes/imio_ts_aes
 
 update-teleservices-package:
 	cd ~/src/imio/teleservices-package
@@ -169,10 +159,10 @@ update-teleservices-package:
 	make init-teleservices-package
 
 init-townstreet:
-	${publik-env-py3}/bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/imio-townstreet/imio_townstreet/
+	${publik-env-py3}bin/hobo-manage imio_indus_deploy -d hobo.dev.publik.love --directory ${imio_src}/imio-townstreet/imio_townstreet/
 
 init-townstreet-passerelle:
-	${publik-env-py3}/bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${imio_src}/teleservices-publikdevinst/passerelle_elements/export_passerelle-imio-ia-tech_atal-demov6_20220228.json --import-users
+	${publik-env-py3}bin/passerelle-manage tenant_command import_site -d passerelle.dev.publik.love ${imio_src}/teleservices-publikdevinst/passerelle_elements/export_passerelle-imio-ia-tech_atal-demov6_20220228.json --import-users
 
 init-dev-api-access:
 	test -s /var/lib/wcs/tenants/wcs.dev.publik.love/apiaccess/1 || cp ${imio_src}/teleservices-publikdevinst/api_access/1 /var/lib/wcs/tenants/wcs.dev.publik.love/apiaccess/1
