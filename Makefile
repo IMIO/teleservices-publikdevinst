@@ -136,14 +136,18 @@ create-passerelle-pays:
 	@echo "Creating passerelle pays..."
 	${publik-env-py3}/bin/passerelle-manage tenant_command import_site --overwrite --import-users -d passerelle.dev.publik.love ${build-e-guichet_path}/passerelle/pays.json
 
+create-hobo-variables:
+	@echo "Creating hobo variables..."
+	${publik-env-py3}/bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet_path}/hobo_create_variables.py
+
 build-e-guichet:
 # Do what the bash script did but translated for Makefile / Publik-dev inst
 # Beware : you must comment the line related to 'build-api-user.py' to build again.
-	${publik-env-py3}/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet_path}/import-authentic-user.py -d authentic.dev.publik.love
-	${publik-env-py3}/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet_path}/auth_fedict_var.py -d authentic.dev.publik.love
-	${publik-env-py3}/bin/wcs-manage runscript --vhost=wcs.dev.publik.love ${build-e-guichet_path}/import-permissions.py full
-	${publik-env-py3}/bin/combo-manage tenant_command import_site -d agent-combo.dev.publik.love ${build-e-guichet_path}/combo-site/combo-portail-agent-structure.json
-	${publik-env-py3}/bin/combo-manage tenant_command import_site -d combo.dev.publik.love ${build-e-guichet_path}/combo-site/combo-site-structure-full.json
+#	${publik-env-py3}/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet_path}/import-authentic-user.py -d authentic.dev.publik.love
+#	${publik-env-py3}/bin/authentic2-multitenant-manage tenant_command runscript ${build-e-guichet_path}/auth_fedict_var.py -d authentic.dev.publik.love
+#	${publik-env-py3}/bin/wcs-manage runscript --vhost=wcs.dev.publik.love ${build-e-guichet_path}/import-permissions.py full
+#	${publik-env-py3}/bin/combo-manage tenant_command import_site -d agent-combo.dev.publik.love ${build-e-guichet_path}/combo-site/combo-portail-agent-structure.json
+#	${publik-env-py3}/bin/combo-manage tenant_command import_site -d combo.dev.publik.love ${build-e-guichet_path}/combo-site/combo-site-structure-full.json
 	${publik-env-py3}/bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet_path}/hobo_create_variables.py
 
 init-publik-imio-industrialisation:
