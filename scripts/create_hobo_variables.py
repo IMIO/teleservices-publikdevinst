@@ -44,5 +44,5 @@ create_variable(
 create_variable(
     "environment_label",
     "Environnement label",
-    "Staging 1",
+    "iA.Téléservices (publik-devinst)",
 )
