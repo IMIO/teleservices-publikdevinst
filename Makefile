@@ -119,20 +119,46 @@ default_position_settings = default_position = 50.4988;4.7199
 site_option_path = /var/lib/wcs/tenants/wcs.dev.publik.love/site-options.cfg
 
 add-default-pos-settings:
-	if grep -q "\[options\]" ${site_option_path}; then \
+	@if grep -q "\[options\]" ${site_option_path}; then \
 		grep -qxF "${default_position_settings}" ${site_option_path} || sed -i "/\[options\]/a\\${default_position_settings}" ${site_option_path}; \
 	else \
-		@echo "❌ '[options]' not found in ${site_option_path}, cannot set default position."; \
+		echo "❌ '[options]' not found in ${site_option_path}, cannot set default position."; \
 	fi
 
 verify-default-pos-settings:
-	if grep -qxF "${default_position_settings}" ${site_option_path}; then \
-		@echo "✅ Default position set successfully."; \
+	@if grep -qxF "${default_position_settings}" ${site_option_path}; then \
+		echo "✅ Default position set successfully."; \
 	else \
-		@echo "❌ Failed to set default position."; \
+		echo "❌ Failed to set default position."; \
+	fi
+
+add-auth-context:
+	@if grep -q "\[options\]" ${site_option_path}; then \
+		grep -qxF "auth-contexts = fedict" ${site_option_path} || sed -i "/\[options\]/a\\auth-contexts = fedict" ${site_option_path}; \
+	else \
+		echo "❌ '[options]' not found in ${site_option_path}, cannot set default position."; \
+	fi
+
+verify-auth-context:
+	@if grep -qxF "auth-contexts = fedict" ${site_option_path}; then \
+		echo "✅ Auth context set successfully."; \
+	else \
+		echo "❌ Failed to set auth context."; \
 	fi
 
 set-default-position: add-default-pos-settings verify-default-pos-settings
+
+set-auth-context: add-auth-context verify-auth-context
+
+alter-site-options:
+	@make set-default-position
+	@make set-auth-context
+
+authorize-mail-from-imio:
+	@cp /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/hobo/00mail_imio.py /home/${USER}/.config/publik/settings/hobo/settings.d/
+	ls /home/${USER}/.config/publik/settings/hobo/settings.d/
+	sudo supervisorctl restart django:hobo
+
 
 # Import legacy "ts1_datasource" passerelle
 # module (motifs et destinations)
@@ -150,7 +176,7 @@ create-passerelle-pays:
 
 create-hobo-variables:
 	@echo "Creating hobo variables..."
-	${publik-env-py3}bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${build-e-guichet_path}/hobo_create_variables.py
+	${publik-env-py3}bin/hobo-manage tenant_command runscript -d hobo.dev.publik.love ${imio_src}/teleservices-publikdevinst/scripts/create_hobo_variables.py
 
 init-publik-imio-industrialisation:
 # publik-imio-industrialisation make install does not install-teleservices-packagework with publik-devinst (see #57805)
