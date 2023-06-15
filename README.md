@@ -56,3 +56,12 @@ Importe le connecteur passerelle (Atal 6) de test.
 * `clean-imio-src`
 
 Supprime tout ce que contiend `~/src/imio`.
+
+
+## Troubleshooting problems
+
+### ModuleNotFoundError: No module named 'passerelle_imio_abiware' (or other module)
+
+This can occur on a fresh install when you already had publik-devinst installed and you have not yet run `make remove-custom-installed-apps-py-files` to clean all the `*.py` files addind our modules into `INSTALLED_APPS`.
+
+OR you have not yet run `make init-passerelle-modules` to install the modules. See Makefile for more details.
