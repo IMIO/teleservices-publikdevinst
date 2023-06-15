@@ -17,9 +17,12 @@ This is a suggest of steps order to follow to install a publik-devinst instance 
 9. `make create-passerelle-api-user-tout-le-monde` (see `teleservices-publikdevinst/Makefile` for more details).
 10. `make create-passerelle-pays` (see `teleservices-publikdevinst/Makefile` for more details).
 11. `make create-hobo-variables` (see `teleservices-publikdevinst/Makefile` for more details).
-12. `make init-publik-imio-industrialisation` (see `teleservices-publikdevinst/Makefile` for more details).
+12. `make alter-site-options` (see `teleservices-publikdevinst/Makefile` for more details).
+13. `make init-publik-imio-industrialisation` (see `teleservices-publikdevinst/Makefile` for more details).
+14. `make import-passerelle-casier-judiciaire` (now a prerequisite for `teleservices-package` install).
 13. `make install-teleservices-package` (see `teleservices-publikdevinst/Makefile` for more details).
-
+14. Browser https://wcs.dev.publik.love/backoffice/settings/sitename and update "Redirection de la page d’accueil" to `{{portal_url}}demarches` (see https://docs.imio.be/private/teleservices/cheatsheets/initialisation_base_ia_teleservices/index.html for more details).
+15. 
 
 ## List of currently available commands
 
