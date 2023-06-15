@@ -24,6 +24,11 @@ help:
 	@echo "- make install-townstreet: Install townstreet package in publik-devinst."
 	@echo "- make import-townstreet-passerelle: Import townstreet passerelle module."
 
+import-passerelle-casier-judiciaire:
+	@test -s ${imio_src}/passerelle-imio-apims-casier-judiciaire || git clone git@github.com:IMIO/passerelle-imio-apims-casier-judiciaire.git ${imio_src}/passerelle-imio-apims-casier-judiciaire
+	@cd ~/src/imio/passerelle-imio-apims-casier-judiciaire;~/envs/publik-env-py3/bin/pip install -e .
+	@cp -r /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/apims-casier-judiciaire.py /home/${USER}/.config/publik/settings/passerelle/settings.d/
+	@make migrate-passerelle-schemas
 
 init-themes:
 # Init imio-publik-themes and make themes avalaible in Publik
