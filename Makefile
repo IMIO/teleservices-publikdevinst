@@ -161,7 +161,6 @@ authorize-mail-from-imio:
 	ls /home/${USER}/.config/publik/settings/hobo/settings.d/
 	sudo supervisorctl restart django:hobo
 
-
 # Import legacy "ts1_datasource" passerelle
 # module (motifs et destinations)
 import-passerelle-motifs-et-destinations-ts1:
@@ -206,12 +205,6 @@ import-townstreet-passerelle:
 
 remove-custom-installed-apps-py-files:
 	rm /home/${USER}/.config/publik/settings/passerelle/settings.d/*.py
-
-# default_from_email = publikdevinst@imio.be
-# email_sender_name = iA.Téléservices (publikdevinst)
-# email_signature = iA.Téléservices (publikdevinst)
-# theme = clapotis-les-canards
-#
 
 add-default-email-settings:
 	@if grep -q "\[variables\]" ${site_option_path}; then \
