@@ -24,6 +24,7 @@ This is a suggest of steps order to follow to install a publik-devinst instance 
 - `make import-passerelle-casier-judiciaire` (now a prerequisite for `teleservices-package` install).
 - `make install-teleservices-package` (see `teleservices-publikdevinst/Makefile` for more details).
 - Browser https://wcs.dev.publik.love/backoffice/settings/sitename and update "Redirection de la page d’accueil" to `{{portal_url}}demarches` (see https://docs.imio.be/private/teleservices/cheatsheets/initialisation_base_ia_teleservices/index.html for more details).
+- Import the essential roles (see https://gitlab.imio.be/teleservices/maintenance-and-validation-scripts/-/tree/main/apps_setup_assets/authentic_roles)
 
 Optionnal / tool :
 
