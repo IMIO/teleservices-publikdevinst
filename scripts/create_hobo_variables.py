@@ -40,3 +40,9 @@ create_variable(
     "iMio · Nom d'utilisateur dans la nav",
     "Oui",
 )
+
+create_variable(
+    "environment_label",
+    "Environnement label",
+    "Staging 1",
+)
