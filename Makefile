@@ -23,6 +23,8 @@ help:
 	@echo "- make update-teleservices-package: Update teleservices package in publik-devinst."
 	@echo "- make install-townstreet: Install townstreet package in publik-devinst."
 	@echo "- make import-townstreet-passerelle: Import townstreet passerelle module."
+# set-imio-basic-theme
+# set-default-email-settings
 
 import-passerelle-casier-judiciaire:
 	@test -s ${imio_src}/passerelle-imio-apims-casier-judiciaire || git clone git@github.com:IMIO/passerelle-imio-apims-casier-judiciaire.git ${imio_src}/passerelle-imio-apims-casier-judiciaire
@@ -204,3 +206,54 @@ import-townstreet-passerelle:
 
 remove-custom-installed-apps-py-files:
 	rm /home/${USER}/.config/publik/settings/passerelle/settings.d/*.py
+
+# default_from_email = publikdevinst@imio.be
+# email_sender_name = iA.Téléservices (publikdevinst)
+# email_signature = iA.Téléservices (publikdevinst)
+# theme = clapotis-les-canards
+#
+
+add-default-email-settings:
+	@if grep -q "\[variables\]" ${site_option_path}; then \
+		grep -qxF "default_from_email = publikdevinst@imio.be" ${site_option_path} || sed -i "/\[variables\]/a\\default_from_email = publikdevinst@imio.be" ${site_option_path}; \
+		grep -qxF "email_sender_name = iA.Téléservices (publikdevinst)" ${site_option_path} || sed -i "/\[variables\]/a\\email_sender_name = iA.Téléservices (publikdevinst)" ${site_option_path}; \
+		grep -qxF "email_signature = iA.Téléservices (publikdevinst)" ${site_option_path} || sed -i "/\[variables\]/a\\email_signature = iA.Téléservices (publikdevinst)" ${site_option_path}; \
+	else \
+		echo "❌ '[variables]' not found in ${site_option_path}, cannot set default email settings."; \
+	fi
+
+verify-default-email-settings:
+	@if grep -qxF "default_from_email = publikdevinst@imio.be" ${site_option_path}; then \
+		echo "✅ Default from email set successfully."; \
+	else \
+		echo "❌ Failed to set default from email."; \
+	fi
+	@if grep -qxF "email_sender_name = iA.Téléservices (publikdevinst)" ${site_option_path}; then \
+		echo "✅ Email sender name set successfully."; \
+	else \
+		echo "❌ Failed to set email sender name."; \
+	fi
+	@if grep -qxF "email_signature = iA.Téléservices (publikdevinst)" ${site_option_path}; then \
+		echo "✅ Email signature set successfully."; \
+	else \
+		echo "❌ Failed to set email signature."; \
+	fi
+
+replace-theme-name:
+	@if grep -q "theme = clapotis-les-canards" ${site_option_path}; then \
+		sed -i "s/theme = clapotis-les-canards/theme = imio-basic/g" ${site_option_path}; \
+		echo "✅ Theme name replaced successfully."; \
+	else \
+		echo "❌ 'theme = clapotis-les-canards' not found, cannot replace theme name."; \
+	fi
+
+verify-theme-name:
+	@if grep -q "theme = imio-basic" ${site_option_path}; then \
+		echo "✅ Theme name is 'imio-basic'."; \
+	else \
+		echo "❌ Failed to replace theme name."; \
+	fi
+
+set-imio-basic-theme: replace-theme-name verify-theme-name
+
+set-default-email-settings: add-default-email-settings verify-default-email-settings
