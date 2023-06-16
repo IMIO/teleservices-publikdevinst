@@ -37,6 +37,7 @@ imio-install:
 	@make create-passerelle-pays
 	@make create-hobo-variables
 	@make import-passerelle-ts1-datasource
+	@make create-regie
 	@make install-teleservices-package
 
 import-passerelle-casier-judiciaire:
@@ -267,3 +268,6 @@ verify-theme-name:
 set-imio-basic-theme: replace-theme-name verify-theme-name
 
 set-default-email-settings: add-default-email-settings verify-default-email-settings
+
+create-regie:
+	${publik-env-py3}bin/combo-manage tenant_command runscript -d combo.dev.publik.love ${build-e-guichet_path}/lingo_create_regie.py
