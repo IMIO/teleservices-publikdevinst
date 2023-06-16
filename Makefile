@@ -28,6 +28,7 @@ help:
 
 imio-install:
 	@make init-imio-src
+	ln -s /home/${USER}/imio/wcs-scripts-teleservices/wcs_scripts_teleservices/* /var/lib/wcs/scripts
 	@make init-publik-imio-industrialisation
 	@make init-themes
 	@make set-default-position
