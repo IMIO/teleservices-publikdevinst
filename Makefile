@@ -1,5 +1,4 @@
 imio_src = ~/src/imio
-build-e-guichet = ~/src/imio/scripts-teleservices/scripts_teleservices/build-e-guichet/datasources/passerelle_legacy_motifs_et_destinations.json
 wcs_tenant = /var/lib/wcs/tenants/wcs.dev.publik.love
 publik-env-py3 = /home/${USER}/envs/publik-env-py3/
 build-e-guichet_path = /home/${USER}/src/imio/scripts-teleservices/scripts_teleservices/build-e-guichet/
@@ -13,7 +12,7 @@ help:
 	@echo "  This will run '~/envs/publik-env-py3/bin/passerelle-manage migrate_schemas' to properly make passerelle modules available in the Publik backoffice."
 	@echo "  Then it will restart the django service using 'sudo supervisorctl restart django:passerelle'."
 	@echo "- make set-default-position: Patch site-options.json to apply a lat/lon (Geodata) default_position setting under [options]."
-	@echo "- make import-passerelle-motifs-et-destinations-ts1: Import legacy 'ts1_datasource' passerelle module (motifs et destinations)..."
+	@echo "- make import-passerelle-ts1-datasource: Import legacy 'ts1_datasource' passerelle module (motifs et destinations)..."
 	@echo "- make create-passerelle-api-user-tout-le-monde: Create passerelle API user 'tout-le-monde'"
 	@echo "- make create-passerelle-pays: Create "Pays" passerelle"
 	@echo "- make create-hobo-variables: Create Hobo variables"
@@ -23,8 +22,22 @@ help:
 	@echo "- make update-teleservices-package: Update teleservices package in publik-devinst."
 	@echo "- make install-townstreet: Install townstreet package in publik-devinst."
 	@echo "- make import-townstreet-passerelle: Import townstreet passerelle module."
-# set-imio-basic-theme
-# set-default-email-settings
+	@echo "- remove-custom-installed-apps-py-files: Remove custom installed apps py files (rm /home/${USER}/.config/publik/settings/passerelle/settings.d/*.py)."
+	@echo "- set-imio-basic-them: Set imio basic theme in the site-options.cfg"
+	@echo "- set-default-email-settings: Set default email settings in the site-options.cfg"
+
+imio-install:
+	@make init-imio-src
+	@make init-publik-imio-industrialisation
+	@make init-themes
+	@make set-default-position
+	@make set-imio-basic-theme
+	@make set-default-email-settings
+	@make create-passerelle-api-user-tout-le-monde
+	@make create-passerelle-pays
+	@make create-hobo-variables
+	@make import-passerelle-ts1-datasource
+	@make install-teleservices-package
 
 import-passerelle-casier-judiciaire:
 	@test -s ${imio_src}/passerelle-imio-apims-casier-judiciaire || git clone git@github.com:IMIO/passerelle-imio-apims-casier-judiciaire.git ${imio_src}/passerelle-imio-apims-casier-judiciaire
@@ -163,9 +176,13 @@ authorize-mail-from-imio:
 
 # Import legacy "ts1_datasource" passerelle
 # module (motifs et destinations)
-import-passerelle-motifs-et-destinations-ts1:
+import-passerelle-ts1-datasource:
 	@echo "Importing legacy 'ts1_datasource' passerelle module (motifs et destinations)..."
-	${publik-env-py3}bin/passerelle-manage tenant_command import_site --overwrite -d passerelle.dev.publik.love /home/${USER}/src/imio/scripts-teleservices/scripts_teleservices/build-e-guichet/datasources/passerelle_legacy_motifs_et_destinations.json
+	@test -s ${imio_src}/passerelle-imio-ts1-datasources || git clone gitea@git.entrouvert.org:entrouvert/passerelle-imio-ts1-datasources.git/ ${imio_src}/passerelle-imio-ts1-datasources
+	@cd ~/src/imio/passerelle-imio-ts1-datasources;~/envs/publik-env-py3/bin/pip install -e .
+	@cp -r /home/${USER}/src/imio/teleservices-publikdevinst/settingsd_files/passerelle/ts1-datasources.py /home/${USER}/.config/publik/settings/passerelle/settings.d/
+	@make migrate-passerelle-schemas
+	@${publik-env-py3}bin/passerelle-manage tenant_command import_site --overwrite -d passerelle.dev.publik.love /home/${USER}/src/imio/scripts-teleservices/scripts_teleservices/build-e-guichet/datasources/passerelle_legacy_motifs_et_destinations.json
 
 create-passerelle-api-user-tout-le-monde:
 	@echo "Creating passerelle API user 'tout-le-monde'..."
@@ -237,7 +254,7 @@ replace-theme-name:
 		sed -i "s/theme = clapotis-les-canards/theme = imio-basic/g" ${site_option_path}; \
 		echo "✅ Theme name replaced successfully."; \
 	else \
-		echo "❌ 'theme = clapotis-les-canards' not found, cannot replace theme name."; \
+		echo "❌ 'theme = clapotis-les-canards' not found, cannot replace theme name. Not an error if the theme is already set ;o)"; \
 	fi
 
 verify-theme-name:
